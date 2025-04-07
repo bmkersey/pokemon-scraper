@@ -82,7 +82,7 @@ def get_pokedex_text(url):
 
   return entries_by_form
 
-def scrape():
+def scrape(output_file='pokedex.json'):
   pokemon = get_pokemon_list()
   for mon in pokemon:
     print(f"Scraping data for {mon['name']}...")
@@ -90,5 +90,5 @@ def scrape():
     mon['pokedex_entries'] = entries
     time.sleep(1)
   
-  with open('pokedex.json', 'w') as f:
+  with open(output_file, 'w') as f:
     json.dump(pokemon, f, indent=2)
