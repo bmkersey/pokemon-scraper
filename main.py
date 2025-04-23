@@ -1,7 +1,7 @@
 from scrape import scrape
 import os
 import json
-from search import search_by_name
+from search import search_by_name, search_by_number, search_by_game
 
 def scrape_pokedex(output_file='pokedex.json'):
   print("Scraping fresh data...please be patient.")
@@ -29,7 +29,6 @@ def print_entry(pokemon):
     print("No Pokédex entries found.")
     return
 
-    # If only one form (e.g. 'default'), just show it
   if len(forms) == 1:
     selected_form = forms[0]
   else:
@@ -43,12 +42,12 @@ def print_entry(pokemon):
         break
       print("Invalid choice. Try again.")
 
-    print(f"\n{pokemon['name']} ({selected_form})")
-    print("Types:", ", ".join(pokemon.get('types', [])))
+  print(f"\n{pokemon['name']} ({selected_form})")
+  print("Types:", ", ".join(pokemon.get('types', [])))
 
-    entries = pokemon['pokedex_entries'][selected_form]
-    for game, entry in entries.items():
-      print(f"\n{game}: {entry}")
+  entries = pokemon['pokedex_entries'][selected_form]
+  for game, entry in entries.items():
+    print(f"\n{game}: {entry}")
 
 def main():
   print("Welcome to the Python Pokedex!")
@@ -74,9 +73,19 @@ def main():
         else:
           print('Not Found')
       case '2':
+        pokemon = search_by_number(data)
+        if pokemon:
+          print_entry(pokemon)
         pass
       case '3':
-        pass
+        result = search_by_game(data)
+        if result:
+          pokemon, form, game = result
+          print(f"\n{pokemon['name']} ({form})")
+          print("Types:", ", ".join(pokemon.get('types', [])))
+          entries = pokemon['pokedex_entries'][form]
+          print(f"\n{game.title()} Entry:")
+          print(entries.get(game.title(), "No entry found."))
       case '4':
         print('Goodbye!')
         break
